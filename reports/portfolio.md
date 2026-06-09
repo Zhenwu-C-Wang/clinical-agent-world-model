@@ -35,6 +35,7 @@ The environment generates trajectories, evaluates baseline policies, trains a li
 - Baseline report: `reports/baseline_results.md`
 - World model evaluation: `reports/world_model_eval.md`
 - Planner comparison: `reports/planner_results.md`
+- Technical blog: `reports/blog_world_model.md`
 - Roadmap: `reports/roadmap.md`
 
 ## Milestone Summary

@@ -12,6 +12,11 @@ Synthetic hospital workflow world model for tool-using clinical AI agents, with 
 - Trained a lightweight random-forest world model to predict next workflow state, safety risk, delay, and audit completeness.
 - Reduced unsafe action rate from `0.505` with direct action to `0.000` with 3-step world-model lookahead while improving task success from `0.822` to `1.000` on synthetic scenarios.
 
+## Read the Technical Blog
+
+- [Building a Synthetic World Model for Clinical AI Agents](reports/blog_world_model.md)
+- [Portfolio report](reports/portfolio.md)
+
 ## Problem
 
 Clinical AI agents that use tools can fail through workflow mistakes: missing context, unsupported evidence, unsafe chart writeback, missing clinician review, overbroad PHI exposure, or scope escalation. This project builds a synthetic environment where those workflow risks can be measured before moving to learned world models and planning.
