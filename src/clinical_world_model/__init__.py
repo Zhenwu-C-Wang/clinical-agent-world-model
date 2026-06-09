@@ -15,18 +15,25 @@ from clinical_world_model.simulator import (
     Trajectory,
     run_episode,
 )
+from clinical_world_model.policies import (
+    ConservativeHumanReviewPolicy,
+    DirectPolicy,
+    SafetyReviewPolicy,
+)
 
 __all__ = [
     "ActionType",
     "AgentAction",
     "ClinicalScenario",
+    "ConservativeHumanReviewPolicy",
+    "DirectPolicy",
     "ClinicalState",
     "HospitalWorkflowSimulator",
     "Outcome",
     "RiskType",
     "SafetyViolation",
+    "SafetyReviewPolicy",
     "Trajectory",
     "Transition",
     "run_episode",
 ]
-

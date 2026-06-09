@@ -28,17 +28,30 @@ The project models a synthetic hospital workflow as:
 
 ## Quickstart
 
+Requires Python >=3.10.
+
 ```bash
 python -m pip install -e ".[dev]"
 pytest
 ```
 
-## Current Status: M0
+## Generate Synthetic Trajectories
+
+```bash
+python scripts/generate_trajectories.py --count 1000 --seed 42 --output data/synthetic_trajectories.jsonl
+```
+
+The generated JSONL contains synthetic workflow trajectories only. It does not contain PHI content; some records include boolean PHI-risk flags for safety evaluation. It is not medical advice.
+
+## Current Status: M1
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
 - Minimal rule-based simulator implemented in `src/clinical_world_model/simulator.py`.
 - Five handwritten synthetic workflow examples are in `examples/handwritten_episodes.jsonl`.
+- Three generation policies are implemented in `src/clinical_world_model/policies.py`.
+- Synthetic trajectory generation is implemented in `scripts/generate_trajectories.py`.
+- The checked-in M1 dataset is `data/synthetic_trajectories.jsonl`.
 - CI runs `pytest`.
 - Project roadmap is in `reports/roadmap.md`.
 
