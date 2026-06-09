@@ -4,6 +4,14 @@
 
 Synthetic hospital workflow world model for tool-using clinical AI agents, with state-transition prediction, safety-risk forecasting, audit-completeness tracking, delay estimation, and lookahead planning.
 
+## Key Results
+
+- Generated `1,000` synthetic hospital workflow trajectories with no PHI content.
+- Covered six workflow actions: context retrieval, note generation, note revision, order drafting, draft writeback, and human review escalation.
+- Covered five safety risks: unsafe writeback, PHI leakage, hallucinated evidence, missing clinician review, and scope escalation.
+- Trained a lightweight random-forest world model to predict next workflow state, safety risk, delay, and audit completeness.
+- Reduced unsafe action rate from `0.505` with direct action to `0.000` with 3-step world-model lookahead while improving task success from `0.822` to `1.000` on synthetic scenarios.
+
 ## Problem
 
 Clinical AI agents that use tools can fail through workflow mistakes: missing context, unsupported evidence, unsafe chart writeback, missing clinician review, overbroad PHI exposure, or scope escalation. This project builds a synthetic environment where those workflow risks can be measured before moving to learned world models and planning.
@@ -11,7 +19,7 @@ Clinical AI agents that use tools can fail through workflow mistakes: missing co
 ## Safety Scope
 
 - Synthetic data only.
-- No PHI is used, requested, stored, or generated.
+- No PHI content is used, requested, stored, or generated.
 - Not medical advice.
 - Not a clinical decision support system.
 - Not intended for diagnosis, treatment, or real clinical deployment.
@@ -67,7 +75,7 @@ python scripts/run_planner.py --training-data data/synthetic_trajectories.jsonl 
 
 The M4 planner uses the learned world model to score candidate actions with a 3-step lookahead objective that rewards task progress and penalizes safety risk, delay, and clinician review burden.
 
-## Current Status: M4
+## Current Status: v0.1
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
@@ -81,6 +89,7 @@ The M4 planner uses the learned world model to score candidate actions with a 3-
 - World-model evaluation is in `reports/world_model_eval.md`.
 - 3-step world-model lookahead planning is implemented in `src/clinical_world_model/planner.py`.
 - Planner comparison results are in `reports/planner_results.md`.
+- Portfolio report is in `reports/portfolio.md`.
 - The checked-in M1 dataset is `data/synthetic_trajectories.jsonl`.
 - CI runs `pytest`.
 - Project roadmap is in `reports/roadmap.md`.
@@ -104,4 +113,4 @@ The M4 planner uses the learned world model to score candidate actions with a 3-
 
 ## Limitations
 
-The simulator is intentionally simplified. It is useful for agent-safety engineering practice, evaluation design, and world-model prototyping, but it does not represent real clinical operations or real patient care.
+The simulator is intentionally simplified. It is useful for agent-safety engineering practice, evaluation design, and world-model prototyping, but it does not represent real clinical operations or real patient care. This is synthetic only, uses no PHI content, is not medical advice, and is not a clinical decision support system.

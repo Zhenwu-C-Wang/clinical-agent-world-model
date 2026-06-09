@@ -50,3 +50,4 @@ Definition of done:
 - Produces `reports/portfolio.md`.
 - README includes problem, approach, quickstart, key results, and limitations.
 - Release is tagged `v0.1`.
+- GitHub topics include `world-models`, `clinical-ai`, `llm-agents`, `agent-safety`, `evals`, `synthetic-data`, and `python`.
