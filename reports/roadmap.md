@@ -51,3 +51,12 @@ Definition of done:
 - README includes problem, approach, quickstart, key results, and limitations.
 - Release is tagged `v0.1`.
 - GitHub topics include `world-models`, `clinical-ai`, `llm-agents`, `agent-safety`, `evals`, `synthetic-data`, and `python`.
+
+## M6: Synthetic Stress Evaluation
+
+Definition of done:
+
+- Adds a harder synthetic stress distribution.
+- Evaluates direct, rule-based safety, and world-model lookahead policies under stress.
+- Produces `reports/stress_results.md`.
+- Confirms the planner reduces unsafe actions while preserving supported workflow completion under stress.

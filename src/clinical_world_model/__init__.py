@@ -28,6 +28,7 @@ from clinical_world_model.world_model import (
     train_and_evaluate_world_model,
 )
 from clinical_world_model.planner import WorldModelLookaheadPolicy
+from clinical_world_model.stress import StressScenarioSummary
 
 __all__ = [
     "ActionType",
@@ -42,6 +43,7 @@ __all__ = [
     "RiskType",
     "SafetyViolation",
     "SafetyReviewPolicy",
+    "StressScenarioSummary",
     "Trajectory",
     "TrajectoryMetrics",
     "Transition",
