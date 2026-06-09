@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clinical-agent-world-model"
-version = "0.1.0"
+version = "0.1.1"
 description = "Synthetic hospital workflow world model for tool-using clinical AI agents."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -20,6 +20,12 @@ dependencies = [
 dev = [
   "pytest>=8.0"
 ]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 addopts = "-q"

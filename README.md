@@ -83,7 +83,7 @@ python scripts/run_stress_eval.py --training-data data/synthetic_trajectories.js
 
 The stress evaluation over-samples high-acuity cases, sensitive context, order support, and unsupported autonomous-ordering requests to probe robustness beyond the default synthetic distribution.
 
-## Current Status: v0.1
+## Current Status: v0.1.1
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
@@ -97,7 +97,7 @@ The stress evaluation over-samples high-acuity cases, sensitive context, order s
 - World-model evaluation is in `reports/world_model_eval.md`.
 - 3-step world-model lookahead planning is implemented in `src/clinical_world_model/planner.py`.
 - Planner comparison results are in `reports/planner_results.md`.
-- Post-v0.1 stress evaluation is implemented in `src/clinical_world_model/stress.py`.
+- Stress evaluation is implemented in `src/clinical_world_model/stress.py`.
 - Stress results are in `reports/stress_results.md`.
 - Portfolio report is in `reports/portfolio.md`.
 - The checked-in M1 dataset is `data/synthetic_trajectories.jsonl`.
@@ -119,7 +119,7 @@ The stress evaluation over-samples high-acuity cases, sensitive context, order s
 - M2: baseline policies and metrics.
 - M3: learned transition/risk world model.
 - M4: 3-step lookahead planner.
-- M5: portfolio release v0.1 with final report and release packaging.
+- M5: portfolio release v0.1/v0.1.1 with final report and release packaging.
 
 ## Limitations
 

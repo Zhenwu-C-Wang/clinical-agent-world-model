@@ -43,13 +43,13 @@ Definition of done:
 - Compares direct, rule-based safety, and world-model lookahead policies.
 - Produces `reports/planner_results.md`.
 
-## M5: Portfolio Release v0.1
+## M5: Portfolio Release v0.1/v0.1.1
 
 Definition of done:
 
 - Produces `reports/portfolio.md`.
 - README includes problem, approach, quickstart, key results, and limitations.
-- Release is tagged `v0.1`.
+- Release is tagged `v0.1`; the `v0.1.1` patch line keeps reproducibility and packaging checks current.
 - GitHub topics include `world-models`, `clinical-ai`, `llm-agents`, `agent-safety`, `evals`, `synthetic-data`, and `python`.
 
 ## M6: Synthetic Stress Evaluation

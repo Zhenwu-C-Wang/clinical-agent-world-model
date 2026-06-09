@@ -1,4 +1,4 @@
-# Portfolio Report: Clinical Agent World Model v0.1
+# Portfolio Report: Clinical Agent World Model v0.1.1
 
 ## One-Line Summary
 
@@ -46,7 +46,7 @@ The environment generates trajectories, evaluates baseline policies, trains a li
 | M2 | Direct, safety-review, and conservative human-review baselines |
 | M3 | Learned transition/risk/delay/audit world model |
 | M4 | 3-step world-model lookahead planner |
-| M5 | Portfolio packaging and v0.1 release |
+| M5 | Portfolio packaging and v0.1/v0.1.1 release line |
 
 ## Key Results
 
