@@ -51,7 +51,15 @@ python scripts/run_baselines.py --count 1000 --seed 42 --output reports/baseline
 
 The baseline report compares direct, safety-review, and conservative human-review policies on task success, unsafe action rate, false decline rate, audit completeness, expected delay, and clinician review burden.
 
-## Current Status: M2
+## Train World Model
+
+```bash
+python scripts/train_world_model.py --input data/synthetic_trajectories.jsonl --seed 42 --output reports/world_model_eval.md
+```
+
+The M3 world model trains lightweight random forests to predict next workflow state, safety violation risk, expected action delay, and audit completeness from synthetic `state + action` features.
+
+## Current Status: M3
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
@@ -61,6 +69,8 @@ The baseline report compares direct, safety-review, and conservative human-revie
 - Synthetic trajectory generation is implemented in `scripts/generate_trajectories.py`.
 - Baseline metrics and reporting are implemented in `src/clinical_world_model/metrics.py`.
 - Baseline results are in `reports/baseline_results.md`.
+- Learned world-model training and evaluation are implemented in `src/clinical_world_model/world_model.py`.
+- World-model evaluation is in `reports/world_model_eval.md`.
 - The checked-in M1 dataset is `data/synthetic_trajectories.jsonl`.
 - CI runs `pytest`.
 - Project roadmap is in `reports/roadmap.md`.

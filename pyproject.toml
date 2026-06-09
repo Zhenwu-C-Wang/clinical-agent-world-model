@@ -12,7 +12,9 @@ license = {text = "Apache-2.0"}
 authors = [
   {name = "Clinical Agent World Model Contributors"}
 ]
-dependencies = []
+dependencies = [
+  "scikit-learn>=1.2"
+]
 
 [project.optional-dependencies]
 dev = [

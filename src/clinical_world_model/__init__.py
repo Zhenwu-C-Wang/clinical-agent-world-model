@@ -21,6 +21,11 @@ from clinical_world_model.policies import (
     SafetyReviewPolicy,
 )
 from clinical_world_model.metrics import PolicyMetrics, TrajectoryMetrics
+from clinical_world_model.world_model import (
+    WorldModelEval,
+    build_dataset,
+    train_and_evaluate_world_model,
+)
 
 __all__ = [
     "ActionType",
@@ -38,5 +43,8 @@ __all__ = [
     "Trajectory",
     "TrajectoryMetrics",
     "Transition",
+    "WorldModelEval",
+    "build_dataset",
     "run_episode",
+    "train_and_evaluate_world_model",
 ]
