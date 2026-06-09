@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.feature_extraction import DictVectorizer
@@ -41,6 +40,7 @@ class WorldModelDataset:
     safety_violation: list[int]
     delay_minutes: list[float]
     audit_completeness: list[float]
+    next_task_progress: list[float]
 
 
 @dataclass(frozen=True)
@@ -75,12 +75,55 @@ class WorldModelEval:
     audit_completeness: RegressionMetrics
 
 
+@dataclass(frozen=True)
+class WorldModelPrediction:
+    next_workflow_stage: str
+    safety_violation_probability: float
+    expected_delay_minutes: float
+    audit_completeness: float
+    next_task_progress: float
+
+
+@dataclass(frozen=True)
+class TrainedWorldModel:
+    next_stage_model: Pipeline
+    safety_model: Pipeline
+    delay_model: Pipeline
+    audit_model: Pipeline
+    progress_model: Pipeline
+
+    def predict(
+        self,
+        state: ClinicalState,
+        action: AgentAction,
+    ) -> WorldModelPrediction:
+        features = [featurize_state_action(state, action)]
+        safety_probability = _positive_class_probability(
+            self.safety_model,
+            features,
+        )
+        return WorldModelPrediction(
+            next_workflow_stage=str(self.next_stage_model.predict(features)[0]),
+            safety_violation_probability=safety_probability,
+            expected_delay_minutes=max(0.0, float(self.delay_model.predict(features)[0])),
+            audit_completeness=min(
+                1.0,
+                max(0.0, float(self.audit_model.predict(features)[0])),
+            ),
+            next_task_progress=min(
+                1.0,
+                max(0.0, float(self.progress_model.predict(features)[0])),
+            ),
+        )
+
+
 def build_dataset(trajectories: list[Trajectory]) -> WorldModelDataset:
     features: list[FeatureRow] = []
     next_workflow_stage: list[str] = []
     safety_violation: list[int] = []
     delay_minutes: list[float] = []
     audit_completeness: list[float] = []
+    next_task_progress: list[float] = []
     for trajectory in trajectories:
         for transition in trajectory.transitions:
             features.append(
@@ -98,6 +141,7 @@ def build_dataset(trajectories: list[Trajectory]) -> WorldModelDataset:
                     transition.state_after,
                 )
             )
+            next_task_progress.append(transition.state_after.task_progress)
     if not features:
         raise ValueError("Cannot build a world-model dataset from zero transitions")
     return WorldModelDataset(
@@ -106,6 +150,7 @@ def build_dataset(trajectories: list[Trajectory]) -> WorldModelDataset:
         safety_violation=safety_violation,
         delay_minutes=delay_minutes,
         audit_completeness=audit_completeness,
+        next_task_progress=next_task_progress,
     )
 
 
@@ -188,6 +233,7 @@ def train_and_evaluate_world_model(
     safety_model = _classifier(seed + 1)
     delay_model = _regressor(seed + 2)
     audit_model = _regressor(seed + 3)
+    progress_model = _regressor(seed + 4)
 
     next_stage_model.fit(
         train_features,
@@ -204,6 +250,10 @@ def train_and_evaluate_world_model(
     audit_model.fit(
         train_features,
         [dataset.audit_completeness[index] for index in train_indices],
+    )
+    progress_model.fit(
+        train_features,
+        [dataset.next_task_progress[index] for index in train_indices],
     )
 
     true_next_stage = [dataset.next_workflow_stage[index] for index in test_indices]
@@ -253,6 +303,32 @@ def train_and_evaluate_world_model(
     )
 
 
+def train_world_model(
+    trajectories: list[Trajectory],
+    seed: int = 42,
+) -> TrainedWorldModel:
+    dataset = build_dataset(trajectories)
+    next_stage_model = _classifier(seed)
+    safety_model = _classifier(seed + 1)
+    delay_model = _regressor(seed + 2)
+    audit_model = _regressor(seed + 3)
+    progress_model = _regressor(seed + 4)
+
+    next_stage_model.fit(dataset.features, dataset.next_workflow_stage)
+    safety_model.fit(dataset.features, dataset.safety_violation)
+    delay_model.fit(dataset.features, dataset.delay_minutes)
+    audit_model.fit(dataset.features, dataset.audit_completeness)
+    progress_model.fit(dataset.features, dataset.next_task_progress)
+
+    return TrainedWorldModel(
+        next_stage_model=next_stage_model,
+        safety_model=safety_model,
+        delay_model=delay_model,
+        audit_model=audit_model,
+        progress_model=progress_model,
+    )
+
+
 def train_and_evaluate_from_jsonl(
     path: str | Path,
     seed: int = 42,
@@ -277,7 +353,8 @@ def calibration_bins(
         selected = [
             (true_label, probability)
             for true_label, probability in zip(true_labels, probabilities)
-            if lower <= probability < upper or (bin_index == bin_count - 1 and probability == 1.0)
+            if lower <= probability < upper
+            or (bin_index == bin_count - 1 and probability == 1.0)
         ]
         if not selected:
             bins.append(
@@ -412,3 +489,11 @@ def _regressor(seed: int) -> Pipeline:
             ),
         ]
     )
+
+
+def _positive_class_probability(model: Pipeline, features: list[FeatureRow]) -> float:
+    probabilities = model.predict_proba(features)[0]
+    classes = list(model.named_steps["model"].classes_)
+    if 1 not in classes:
+        return 0.0
+    return float(probabilities[classes.index(1)])

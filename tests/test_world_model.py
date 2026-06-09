@@ -19,6 +19,7 @@ def test_build_dataset_flattens_transitions() -> None:
     assert len(dataset.features) == len(dataset.safety_violation)
     assert len(dataset.features) == len(dataset.delay_minutes)
     assert len(dataset.features) == len(dataset.audit_completeness)
+    assert len(dataset.features) == len(dataset.next_task_progress)
     assert "action_type" in dataset.features[0]
     assert "workflow_stage" in dataset.features[0]
 

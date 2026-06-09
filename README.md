@@ -59,7 +59,15 @@ python scripts/train_world_model.py --input data/synthetic_trajectories.jsonl --
 
 The M3 world model trains lightweight random forests to predict next workflow state, safety violation risk, expected action delay, and audit completeness from synthetic `state + action` features.
 
-## Current Status: M3
+## Run Lookahead Planner
+
+```bash
+python scripts/run_planner.py --training-data data/synthetic_trajectories.jsonl --count 1000 --seed 42 --horizon 3 --output reports/planner_results.md
+```
+
+The M4 planner uses the learned world model to score candidate actions with a 3-step lookahead objective that rewards task progress and penalizes safety risk, delay, and clinician review burden.
+
+## Current Status: M4
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
@@ -71,6 +79,8 @@ The M3 world model trains lightweight random forests to predict next workflow st
 - Baseline results are in `reports/baseline_results.md`.
 - Learned world-model training and evaluation are implemented in `src/clinical_world_model/world_model.py`.
 - World-model evaluation is in `reports/world_model_eval.md`.
+- 3-step world-model lookahead planning is implemented in `src/clinical_world_model/planner.py`.
+- Planner comparison results are in `reports/planner_results.md`.
 - The checked-in M1 dataset is `data/synthetic_trajectories.jsonl`.
 - CI runs `pytest`.
 - Project roadmap is in `reports/roadmap.md`.
