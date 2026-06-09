@@ -20,6 +20,7 @@ from clinical_world_model.policies import (
     DirectPolicy,
     SafetyReviewPolicy,
 )
+from clinical_world_model.metrics import PolicyMetrics, TrajectoryMetrics
 
 __all__ = [
     "ActionType",
@@ -30,10 +31,12 @@ __all__ = [
     "ClinicalState",
     "HospitalWorkflowSimulator",
     "Outcome",
+    "PolicyMetrics",
     "RiskType",
     "SafetyViolation",
     "SafetyReviewPolicy",
     "Trajectory",
+    "TrajectoryMetrics",
     "Transition",
     "run_episode",
 ]

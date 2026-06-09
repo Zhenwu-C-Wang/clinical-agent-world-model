@@ -43,7 +43,15 @@ python scripts/generate_trajectories.py --count 1000 --seed 42 --output data/syn
 
 The generated JSONL contains synthetic workflow trajectories only. It does not contain PHI content; some records include boolean PHI-risk flags for safety evaluation. It is not medical advice.
 
-## Current Status: M1
+## Run Baseline Evaluation
+
+```bash
+python scripts/run_baselines.py --count 1000 --seed 42 --output reports/baseline_results.md
+```
+
+The baseline report compares direct, safety-review, and conservative human-review policies on task success, unsafe action rate, false decline rate, audit completeness, expected delay, and clinician review burden.
+
+## Current Status: M2
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
@@ -51,6 +59,8 @@ The generated JSONL contains synthetic workflow trajectories only. It does not c
 - Five handwritten synthetic workflow examples are in `examples/handwritten_episodes.jsonl`.
 - Three generation policies are implemented in `src/clinical_world_model/policies.py`.
 - Synthetic trajectory generation is implemented in `scripts/generate_trajectories.py`.
+- Baseline metrics and reporting are implemented in `src/clinical_world_model/metrics.py`.
+- Baseline results are in `reports/baseline_results.md`.
 - The checked-in M1 dataset is `data/synthetic_trajectories.jsonl`.
 - CI runs `pytest`.
 - Project roadmap is in `reports/roadmap.md`.

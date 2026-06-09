@@ -91,6 +91,15 @@ class SafetyReviewPolicy:
                 action_type=ActionType.DECLINE,
                 rationale="Autonomous ordering is outside supported scope.",
             )
+        if (
+            scenario.acuity == "high"
+            and scenario.requested_scope == "order_support"
+            and scenario.requires_order
+        ):
+            return AgentAction(
+                action_type=ActionType.DECLINE,
+                rationale="High-acuity order support is conservatively declined.",
+            )
         if not state.patient_context_available:
             return AgentAction(
                 action_type=ActionType.RETRIEVE_EMR_CONTEXT,
