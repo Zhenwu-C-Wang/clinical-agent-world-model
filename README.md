@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Zhenwu-C-Wang/clinical-agent-world-model/actions/workflows/ci.yml/badge.svg)](https://github.com/Zhenwu-C-Wang/clinical-agent-world-model/actions/workflows/ci.yml)
 
-Synthetic hospital workflow world model for tool-using clinical AI agents, with state-transition prediction, safety-risk forecasting, audit-completeness tracking, delay estimation, and lookahead planning.
+A reproducible synthetic hospital workflow world model for testing whether tool-using clinical AI agents can plan safer actions before touching real clinical systems.
 
 ## Key Results
 
@@ -11,6 +11,19 @@ Synthetic hospital workflow world model for tool-using clinical AI agents, with 
 - Covered five safety risks: unsafe writeback, PHI leakage, hallucinated evidence, missing clinician review, and scope escalation.
 - Trained a lightweight random-forest world model to predict next workflow state, safety risk, delay, and audit completeness.
 - Reduced unsafe action rate from `0.505` with direct action to `0.000` with 3-step world-model lookahead while improving task success from `0.822` to `1.000` on synthetic scenarios.
+
+## 5-Minute Reproduction
+
+Requires Python >=3.10.
+
+```bash
+python -m pip install -e ".[dev]"
+python -c "import clinical_world_model; import clinical_world_model.planner"
+python scripts/generate_trajectories.py --count 1000 --seed 42 --output /tmp/clinical_world_trajectories.jsonl
+python scripts/train_world_model.py --input /tmp/clinical_world_trajectories.jsonl --seed 42 --output /tmp/clinical_world_model_eval.md
+python scripts/run_planner.py --training-data /tmp/clinical_world_trajectories.jsonl --count 1000 --seed 42 --horizon 3 --output /tmp/clinical_world_planner.md
+pytest
+```
 
 ## Read the Technical Blog
 
@@ -39,7 +52,7 @@ The project models a synthetic hospital workflow as:
 - `Outcome`: progress delta, delay, audit event, review burden, and safety violations.
 - `SafetyViolation`: synthetic risk labels for unsafe writeback, PHI leakage, hallucinated evidence, missing clinician review, and scope escalation.
 
-## Quickstart
+## Developer Quickstart
 
 Requires Python >=3.10.
 
@@ -124,7 +137,7 @@ The stress evaluation over-samples high-acuity cases, sensitive context, order s
 - M2: baseline policies and metrics.
 - M3: learned transition/risk world model.
 - M4: 3-step lookahead planner.
-- M5: portfolio release v0.1/v0.1.1 with final report and release packaging.
+- M5: portfolio release v0.1.2 with final report, reproducible editable installs, and release packaging.
 
 ## Limitations
 
