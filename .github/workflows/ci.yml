@@ -16,7 +16,11 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Check installed package import
         run: python -c "import clinical_world_model; import clinical_world_model.planner"
-      - name: Check CLI script smoke
-        run: python scripts/generate_trajectories.py --count 10 --seed 42 --output /tmp/trajectories.jsonl
+      - name: Check trajectory generation smoke
+        run: python scripts/generate_trajectories.py --count 40 --seed 42 --output /tmp/trajectories.jsonl
+      - name: Check world model training smoke
+        run: python scripts/train_world_model.py --input /tmp/trajectories.jsonl --seed 42 --output /tmp/world_model_eval.md
+      - name: Check planner smoke
+        run: python scripts/run_planner.py --training-data /tmp/trajectories.jsonl --count 20 --seed 42 --horizon 3 --output /tmp/planner.md
       - name: Run tests
         run: pytest

@@ -88,7 +88,7 @@ python scripts/run_stress_eval.py --training-data data/synthetic_trajectories.js
 
 The stress evaluation over-samples high-acuity cases, sensitive context, order support, and unsupported autonomous-ordering requests to probe robustness beyond the default synthetic distribution.
 
-## Current Status: v0.1.1
+## Current Status: v0.1.2
 
 - Python package under `src/clinical_world_model`.
 - Core schemas implemented in `src/clinical_world_model/schemas.py`.
