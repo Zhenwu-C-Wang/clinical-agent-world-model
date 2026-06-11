@@ -24,3 +24,5 @@ jobs:
         run: python scripts/run_planner.py --training-data /tmp/trajectories.jsonl --count 20 --seed 42 --horizon 3 --output /tmp/planner.md
       - name: Run tests
         run: pytest
+      - name: Check report freshness
+        run: python scripts/check_reports_fresh.py

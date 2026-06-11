@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added `Makefile` release commands for smoke checks, report regeneration, report freshness checks, and release verification.
+- Added `scripts/check_reports_fresh.py` to regenerate checked-in reports and fail when committed reports drift from reproducible outputs.
+- Added report freshness checking to CI.
+
 ## v0.1.2
 
 - Made editable/dev installation reproducible with `python -m pip install -e ".[dev]"`.
