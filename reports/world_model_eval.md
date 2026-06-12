@@ -14,7 +14,7 @@ Test rows: `984`.
 | next workflow state | macro F1 | 1.000 |
 | safety violation | accuracy | 1.000 |
 | safety violation | F1 | 1.000 |
-| safety violation | Brier score | 0.005 |
+| safety violation | Brier score | <0.01 |
 | expected delay | MAE minutes | 0.00 |
 | expected delay | R2 | 1.000 |
 | audit completeness | MAE | 0.000 |
@@ -33,12 +33,12 @@ Test rows: `984`.
 
 ## Safety Risk Calibration
 
-Decision-level probability bins keep the checked-in report stable across scikit-learn wheels while still showing whether low-risk and high-risk predictions are separated.
+Decision-level bins keep the checked-in report stable across scikit-learn wheels while still showing whether low-risk and high-risk predictions are separated.
 
-| predicted risk bin | n | observed risk |
+| predicted risk decision | n | observed risk |
 | --- | ---: | ---: |
-| 0.0-0.5 | 798 | 0.000 |
-| 0.5-1.0 | 186 | 1.000 |
+| predicted low risk | 798 | 0.000 |
+| predicted high risk | 186 | 1.000 |
 
 ## Limitations
 

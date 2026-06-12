@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import subprocess
 import sys
 import tempfile
@@ -62,6 +63,23 @@ def _read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8").replace("\r\n", "\n")
 
 
+def _print_diff(checked_in_path: Path, generated_path: Path, limit: int = 80) -> None:
+    checked_in = _read_text(checked_in_path).splitlines(keepends=True)
+    generated = _read_text(generated_path).splitlines(keepends=True)
+    diff_lines = list(
+        difflib.unified_diff(
+            checked_in,
+            generated,
+            fromfile=str(checked_in_path.relative_to(REPO_ROOT)),
+            tofile=str(generated_path),
+        )
+    )
+    for line in diff_lines[:limit]:
+        print(line, end="", file=sys.stderr)
+    if len(diff_lines) > limit:
+        print(f"... diff truncated after {limit} lines", file=sys.stderr)
+
+
 def check_reports_fresh(keep_generated: bool = False) -> int:
     stale_reports: list[tuple[str, Path]] = []
 
@@ -83,6 +101,7 @@ def check_reports_fresh(keep_generated: bool = False) -> int:
                     f"- {report_path} differs from regenerated output at {generated_path}",
                     file=sys.stderr,
                 )
+                _print_diff(REPO_ROOT / report_path, generated_path)
             if keep_generated:
                 print(f"generated reports kept under {tmp_root}", file=sys.stderr)
                 input("Press Enter to remove generated reports and exit...")
@@ -107,4 +126,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

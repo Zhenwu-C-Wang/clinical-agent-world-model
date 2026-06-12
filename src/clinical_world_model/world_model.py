@@ -290,7 +290,7 @@ def train_and_evaluate_world_model(
             accuracy=accuracy_score(true_safety, pred_safety),
             f1=f1_score(true_safety, pred_safety, zero_division=0),
             brier_score=brier_score_loss(true_safety, safety_prob),
-            calibration_bins=calibration_bins(true_safety, safety_prob, bin_count=2),
+            calibration_bins=safety_decision_bins(true_safety, pred_safety),
         ),
         delay=RegressionMetrics(
             mae=mean_absolute_error(true_delay, pred_delay),
@@ -341,38 +341,31 @@ def train_and_evaluate_from_jsonl(
     )
 
 
-def calibration_bins(
+def safety_decision_bins(
     true_labels: list[int],
-    probabilities: list[float],
-    bin_count: int = 5,
+    predicted_labels: list[int],
 ) -> list[dict[str, float | int]]:
     bins: list[dict[str, float | int]] = []
-    for bin_index in range(bin_count):
-        lower = bin_index / bin_count
-        upper = (bin_index + 1) / bin_count
+    for predicted_label, label in [(0, "predicted low risk"), (1, "predicted high risk")]:
         selected = [
-            (true_label, probability)
-            for true_label, probability in zip(true_labels, probabilities)
-            if lower <= probability < upper
-            or (bin_index == bin_count - 1 and probability == 1.0)
+            true_label
+            for true_label, predicted in zip(true_labels, predicted_labels)
+            if predicted == predicted_label
         ]
         if not selected:
             bins.append(
                 {
-                    "bin": f"{lower:.1f}-{upper:.1f}",
+                    "bin": label,
                     "count": 0,
-                    "avg_predicted_risk": 0.0,
                     "observed_risk": 0.0,
                 }
             )
             continue
         bins.append(
             {
-                "bin": f"{lower:.1f}-{upper:.1f}",
+                "bin": label,
                 "count": len(selected),
-                "avg_predicted_risk": sum(item[1] for item in selected)
-                / len(selected),
-                "observed_risk": sum(item[0] for item in selected) / len(selected),
+                "observed_risk": sum(selected) / len(selected),
             }
         )
     return bins
@@ -396,7 +389,7 @@ def render_world_model_report(evaluation: WorldModelEval) -> str:
         f"| next workflow state | macro F1 | {evaluation.next_stage.macro_f1:.3f} |",
         f"| safety violation | accuracy | {evaluation.safety_violation.accuracy:.3f} |",
         f"| safety violation | F1 | {evaluation.safety_violation.f1:.3f} |",
-        f"| safety violation | Brier score | {evaluation.safety_violation.brier_score:.3f} |",
+        f"| safety violation | Brier score | {format_small_score(evaluation.safety_violation.brier_score)} |",
         f"| expected delay | MAE minutes | {evaluation.delay.mae:.2f} |",
         f"| expected delay | R2 | {evaluation.delay.r2:.3f} |",
         f"| audit completeness | MAE | {evaluation.audit_completeness.mae:.3f} |",
@@ -411,9 +404,9 @@ def render_world_model_report(evaluation: WorldModelEval) -> str:
         "",
         "## Safety Risk Calibration",
         "",
-        "Decision-level probability bins keep the checked-in report stable across scikit-learn wheels while still showing whether low-risk and high-risk predictions are separated.",
+        "Decision-level bins keep the checked-in report stable across scikit-learn wheels while still showing whether low-risk and high-risk predictions are separated.",
         "",
-        "| predicted risk bin | n | observed risk |",
+        "| predicted risk decision | n | observed risk |",
         "| --- | ---: | ---: |",
     ]
     for item in evaluation.safety_violation.calibration_bins:
@@ -440,6 +433,12 @@ def render_world_model_report(evaluation: WorldModelEval) -> str:
         ]
     )
     return "\n".join(lines)
+
+
+def format_small_score(value: float) -> str:
+    if value < 0.01:
+        return "<0.01"
+    return f"{value:.3f}"
 
 
 def confusion_matrix_markdown(labels: list[str], matrix: list[list[int]]) -> str:

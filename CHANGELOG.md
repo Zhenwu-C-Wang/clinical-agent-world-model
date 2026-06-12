@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Made world-model calibration reporting stable across scikit-learn wheels by using decision-level probability bins.
+- Made world-model calibration reporting stable across scikit-learn wheels by using decision-level risk bins.
+- Added short unified diffs to stale report freshness failures.
 - Added `Makefile` release commands for smoke checks, report regeneration, report freshness checks, and release verification.
 - Added `scripts/check_reports_fresh.py` to regenerate checked-in reports and fail when committed reports drift from reproducible outputs.
 - Added report freshness checking to CI.
