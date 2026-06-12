@@ -290,7 +290,7 @@ def train_and_evaluate_world_model(
             accuracy=accuracy_score(true_safety, pred_safety),
             f1=f1_score(true_safety, pred_safety, zero_division=0),
             brier_score=brier_score_loss(true_safety, safety_prob),
-            calibration_bins=calibration_bins(true_safety, safety_prob),
+            calibration_bins=calibration_bins(true_safety, safety_prob, bin_count=2),
         ),
         delay=RegressionMetrics(
             mae=mean_absolute_error(true_delay, pred_delay),
@@ -411,8 +411,10 @@ def render_world_model_report(evaluation: WorldModelEval) -> str:
         "",
         "## Safety Risk Calibration",
         "",
-        "| predicted risk bin | n | avg predicted risk | observed risk |",
-        "| --- | ---: | ---: | ---: |",
+        "Decision-level probability bins keep the checked-in report stable across scikit-learn wheels while still showing whether low-risk and high-risk predictions are separated.",
+        "",
+        "| predicted risk bin | n | observed risk |",
+        "| --- | ---: | ---: |",
     ]
     for item in evaluation.safety_violation.calibration_bins:
         lines.append(
@@ -421,7 +423,6 @@ def render_world_model_report(evaluation: WorldModelEval) -> str:
                 [
                     str(item["bin"]),
                     str(item["count"]),
-                    f"{float(item['avg_predicted_risk']):.3f}",
                     f"{float(item['observed_risk']):.3f}",
                 ]
             )

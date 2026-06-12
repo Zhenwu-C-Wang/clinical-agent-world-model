@@ -33,13 +33,12 @@ Test rows: `984`.
 
 ## Safety Risk Calibration
 
-| predicted risk bin | n | avg predicted risk | observed risk |
-| --- | ---: | ---: | ---: |
-| 0.0-0.2 | 787 | 0.029 | 0.000 |
-| 0.2-0.4 | 11 | 0.244 | 0.000 |
-| 0.4-0.6 | 7 | 0.558 | 1.000 |
-| 0.6-0.8 | 7 | 0.681 | 1.000 |
-| 0.8-1.0 | 172 | 0.973 | 1.000 |
+Decision-level probability bins keep the checked-in report stable across scikit-learn wheels while still showing whether low-risk and high-risk predictions are separated.
+
+| predicted risk bin | n | observed risk |
+| --- | ---: | ---: |
+| 0.0-0.5 | 798 | 0.000 |
+| 0.5-1.0 | 186 | 1.000 |
 
 ## Limitations
 
